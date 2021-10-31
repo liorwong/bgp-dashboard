@@ -1,9 +1,14 @@
 version: '2'
 services:
-  gobgp:
-    build: ./gobgp
-    ports:
-      - 179:179
+  # gobgp:
+  #   build: ./gobgp
+  #   ports:
+  #     - 179:179
+  #   volumes:
+  #     - .:/var/tmp
+  #   restart: always
+  bgpdump:
+    build: ./bgpdump
     volumes:
       - .:/var/tmp
     restart: always

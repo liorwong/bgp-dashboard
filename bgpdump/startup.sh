@@ -1,0 +1,1 @@
+bgpdump -m /root/bgpdump/rib.latest.bz2 | /var/tmp/bgpdump_to_mongo.py

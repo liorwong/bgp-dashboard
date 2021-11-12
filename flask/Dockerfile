@@ -1,10 +1,10 @@
-FROM ubuntu:17.10
+FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update
 RUN apt-get remove -y binutils
-RUN apt-get install -y python3.6
+RUN apt-get install -y python3.7
 RUN apt-get install -y python3-pip
 RUN apt-get install -y python-dev
 RUN apt-get install -y uwsgi-plugin-python

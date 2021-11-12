@@ -1,0 +1,1 @@
+exec /root/bgpdump/startup.sh

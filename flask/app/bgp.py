@@ -4,8 +4,7 @@ from flask import Flask, jsonify, render_template
 
 import constants as C
 from apscheduler.schedulers.background import BackgroundScheduler
-from functions import (asn_name_query, get_ip_json, is_peer, is_transit,
-                       reverse_dns_query, dns_query)
+from functions import (asn_name_query, get_ip_json, is_peer, is_transit,reverse_dns_query, dns_query)
 from Stats import Stats
 
 app = Flask(__name__)
@@ -203,7 +202,7 @@ def get_domain(domain):
     for ns in name_servers:
         if org in ns.lower():
             local_ns = ns.lower()
-    if local_ns is '':
+    if local_ns == '':
         return jsonify({})
     else:
         domain_ip = str(dns_query(local_ns))
@@ -230,7 +229,7 @@ myStats = Stats()
 threading.Thread(target=myStats.update_stats).start()
 threading.Thread(target=myStats.update_advanced_stats).start()
 sched.add_job(myStats.update_stats, 'interval', seconds=5)
-sched.add_job(myStats.update_advanced_stats, 'interval', seconds=60)
+sched.add_job(myStats.update_advanced_stats, 'interval', seconds=10)
 sched.start()
 
 if __name__ == '__main__':

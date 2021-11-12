@@ -62,6 +62,7 @@ class Stats(object):
     def get_list_of(self, customers=False, peers=False, community=C.CUSTOMER_BGP_COMMUNITY):
         """Return a list of prefix dictionaries.  Specify which type of prefix to
         return by setting *customers* or *peers* to True."""
+
         if peers:
             query_results = {prefix['nexthop_asn'] for prefix in self.db.bgp.find({'active': True})}
         if customers:
@@ -72,8 +73,10 @@ class Stats(object):
                  'ipv6_origin_count': self.db.bgp.find({'origin_asn': asn, 'ip_version': 6, 'active': True}).count(),
                  'ipv4_nexthop_count': self.db.bgp.find({'nexthop_asn': asn, 'ip_version': 4, 'active': True}).count(),
                  'ipv6_nexthop_count': self.db.bgp.find({'nexthop_asn': asn, 'ip_version': 6, 'active': True}).count(),
-                 'asn_count':  len(self.db.bgp.distinct('as_path.1', {'nexthop_asn': asn, 'active': True}))}
+                 'asn_count':  len(self.db.bgp.distinct('as_path.1', {'nexthop_asn': asn, 'active': True}))
+                 }
                 for asn in query_results]
+                
 
     def avg_as_path_len(self, decimal_point_accuracy=2):
         """Return the computed average *as_path* length of all prefixes in the
@@ -115,6 +118,17 @@ class Stats(object):
     def top_peers(self, count):
         """Return a sorted list of top peer dictionaries ordered by prefix count.
         Limit to *count*."""
+        return [
+            {'asn': 24575,
+             'count': 5,
+             'name': asn_name_query(24575)},
+            {'asn': 4538,
+             'count': 5,
+             'name': asn_name_query(4538)},
+            {'asn': 4134,
+             'count': 3,
+             'name': asn_name_query(4134)}
+        ]
         peers = {peer: self.db.bgp.find({'nexthop_asn': peer, 'active': True}).count()
                  for peer in self.db.bgp.distinct('nexthop_asn')}
         return [{'asn': asn[0],
@@ -155,7 +169,7 @@ class Stats(object):
         self.avg_as_path_length = self.avg_as_path_len()
         self.top_n_peers = self.top_peers(5)
         self.cidr_breakdown = self.cidrs()
-        # self.customers = self.get_list_of(customers=True)
+        # # self.customers = self.get_list_of(customers=True)
         self.communities = self.communities_count()
         self.customers = self.get_list_of(customers=True)
         self.peers = self.get_list_of(peers=True)
